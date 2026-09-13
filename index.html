@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PLAY BOY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #00ff88;
+      --green-dark: #00cc6a;
+      --gold: #ffd700;
+      --bg: #050a07;
+      --card: rgba(0,255,136,0.04);
+      --border: rgba(0,255,136,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated BG */
+    .bg-anim {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 10% 20%, rgba(0,255,136,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 90% 80%, rgba(0,200,100,0.05) 0%, transparent 60%),
+        var(--bg);
+    }
+
+    .bg-anim::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: float 8s ease-in-out infinite;
+      z-index: 0;
+    }
+    .orb1 { width: 300px; height: 300px; background: var(--green); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 200px; height: 200px; background: var(--green); bottom: 100px; right: -50px; animation-delay: 3s; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
+
+    /* Main */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 32px;
+    }
+
+    /* Top bar */
+    .topbar {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--green);
+      padding: 10px 0 12px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    /* Profile section */
+    .profile-wrap {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .avatar-ring {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green), #00cc6a, #004422, var(--green));
+      padding: 3px;
+      box-shadow: 0 0 30px rgba(0,255,136,0.5), 0 0 60px rgba(0,255,136,0.2);
+      animation: spin-ring 6s linear infinite;
+    }
+    @keyframes spin-ring { to { transform: rotate(360deg); } }
+
+    .avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--bg);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+    /* Heading */
+    .headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(38px, 10vw, 62px);
+      line-height: 1;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-top: 28px;
+      background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .headline span {
+      background: linear-gradient(90deg, var(--green), #00cc6a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Hindi subtext */
+    .subtext {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      text-align: center;
+      max-width: 340px;
+      line-height: 1.8;
+      margin-top: 16px;
+    }
+    .subtext b { color: var(--green); }
+
+    /* Features grid */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+      margin-top: 28px;
+    }
+
+    .feat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feat-card:hover { border-color: var(--green); transform: translateY(-3px); }
+    .feat-icon { font-size: 22px; margin-bottom: 6px; }
+    .feat-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: rgba(255,255,255,0.85); }
+
+    /* Counter */
+    .counter-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .counter-item { text-align: center; }
+    .counter-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--green);
+      letter-spacing: 2px;
+    }
+    .counter-lbl { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.4); }
+
+    /* CTA */
+    .cta-wrap {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 28px;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      padding: 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 0 30px rgba(0,255,136,0.4), 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
+    @keyframes shimmer { to { left: 100%; } }
+
+    .cta-btn:hover { transform: scale(1.02); box-shadow: 0 0 45px rgba(0,255,136,0.6); }
+
+    .cta-note {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 36px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      max-width: 420px;
+      padding-top: 20px;
+    }
+    .footer a { text-decoration: none; }
+    .footer-txt {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .footer-sub { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-anim"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="wrapper">
+
+    <div class="topbar">TRUSTED • VERIFIED • REAL • DAILY UPDATES • 18+ ONLY</div>
+
+    <div class="profile-wrap">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <img src="profile.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none';this.parentElement.innerHTML='🔥'">
+        </div>
+      </div>
+
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        ACTIVE NOW
+      </div>
+    </div>
+
+    <div class="headline">
+      EXCLUSIVE<br><span>TELEGRAM</span><br>COMMUNITY
+    </div>
+
+    <p class="subtext">
+      भाइयों यहाँ मिलता है <b>Real & Genuine काम</b> — बिल्कुल free।<br>
+      एक बार ज़रूर join करें 👇
+    </p>
+<div class="cta-wrap">
+      <a id="join-telegram-now"
+         href="https://telegram.me/+bcf55PmCN6JjMmNl"
+         target="_blank"
+         class="cta-btn">
+        <span>📲</span> JOIN FREE TELEGRAM
+      </a>
+      <p class="cta-note">⚠️ LIMITED SLOTS — JOIN NOW</p>
+    </div>
+    <div class="features">
+      <div class="feat-card">
+        <div class="feat-icon">✅</div>
+        <div class="feat-label">REAL WORK</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-label">TRUSTED</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📅</div>
+        <div class="feat-label">DAILY UPDATES</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💚</div>
+        <div class="feat-label">FREE JOIN</div>
+      </div>
+    </div>
+
+    <div class="counter-row">
+      <div class="counter-item">
+        <div class="counter-num">10K+</div>
+        <div class="counter-lbl">MEMBERS</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-num">100%</div>
+        <div class="counter-lbl">FREE</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-num">24/7</div>
+        <div class="counter-lbl">UPDATES</div>
+      </div>
+    </div>
+
+    
+
+    <div class="footer">
+      <a href="https://t.me/adsrankmedia">
+        <p class="footer-txt">ADMINISTERED BY ADSRANKMEDIA</p>
+      </a>
+      <p class="footer-sub">© 2025 • For 18+ Users Only</p>
+    </div>
+
+  </div>
+
+  <!-- ✅ CTA Click Tracking -->
+  <script>
+    document.getElementById('join-telegram-now').addEventListener('click', function () {
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'Subscribe');    // Fires when user clicks Join
+        fbq('track', 'Lead');         // Also fires Lead event for ad optimization
+      }
+    });
+  </script>
+
+</body>
+</html>
